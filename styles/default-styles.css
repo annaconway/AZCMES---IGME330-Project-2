@@ -1,0 +1,14 @@
+body{
+    background-color: coral;
+    margin: auto;
+    width: 700px;
+    padding: 10px;
+}
+canvas{
+    border: 10px double white;
+}
+#controlContainer{
+    background-color: white;
+    border:10px double coral;
+    width: 700px;
+}
