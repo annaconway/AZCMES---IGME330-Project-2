@@ -1,14 +1,47 @@
-body{
+body {
     background-color: coral;
     margin: auto;
     width: 700px;
     padding: 10px;
 }
-canvas{
+
+canvas {
     border: 10px double white;
 }
-#controlContainer{
+
+#controlContainer {
     background-color: white;
-    border:10px double coral;
+    border: 10px double coral;
     width: 700px;
+    padding-left: 10px;
+}
+
+#controls {
+    margin-left: 1rem;
+}
+
+#volumeLabel {
+    margin-left: 1rem;
+}
+
+section {
+    margin-bottom: 1rem;
+}
+
+#playButton {
+    font-size: 1rem;
+    width: 4rem;
+}
+
+button[data-playing="yes"]:after {
+    content: "Pause";
+}
+
+button[data-playing="no"]:after {
+    content: "Play";
+}
+
+#fsButton {
+    font-size: 1rem;
+    width: 7rem;
 }

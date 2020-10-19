@@ -1,21 +1,36 @@
+import * as utils from './utils.js';
+
+let analyserNode, audioData;
 const canvasWidth = 700, canvasHeight = 400;
-let canvas, ctx;
+let ctx;
 
-window.onload = init;
+function setupCanvas(canvasElement, analyserNodeRef) {
 
-function init() {
-    canvas = document.querySelector("#mainCanvas");
-    ctx = canvas.getContext('2d');
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+    // Create canvas
+    ctx = canvasElement.getContext("2d");
+    canvasElement.width = canvasWidth;
+    canvasElement.height = canvasHeight;
 
+    // Keep a reference to the analyser node
+    analyserNode = analyserNodeRef;
+
+    // This is the array where the analyser data will be stored
+    audioData = new Uint8Array(analyserNode.fftSize / 2);
+
+    // Draw background
+    ctx.save();
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  
-    drawBarFromLeft(500, 10, 50, 50, 150, "blue", "skyblue");
-    drawBarFromLeft(100, 100, 50, 50, 75, "red", "coral");    
-    drawBarFromBottom(150, 175, 60, 80, 150, "pink", "hotpink");  
+    ctx.restore();
+
 }
+
+function draw() {
+
+    analyserNode.getByteFrequencyData(audioData); // Frequency data
+    //analyserNode.getByteTimeDomainData(audioData); // Waveform data
+}
+
 
 function drawBarFromLeft(x, y, width, length, barLength, fillColor, strokeColor) {
 
@@ -80,3 +95,5 @@ function drawBarFromBottom(x, y, width, length, barLength, fillColor, strokeColo
 
     ctx.restore();
 }
+
+export { setupCanvas, draw };
