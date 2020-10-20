@@ -30,10 +30,9 @@ function loop() {
 
     lastUpdate = now;
     sampleTimer += dt;
-    if(sampleTimer >= 1/audio.K_SampleSpecs.samplesPerSecond)
-    {
+    if (sampleTimer >= 1 / audio.K_SampleSpecs.samplesPerSecond) {
         audio.sample();
-        sampleTimer -= 1/audio.K_SampleSpecs.samplesPerSecond;
+        sampleTimer -= 1 / audio.K_SampleSpecs.samplesPerSecond;
         console.log("sampled");
     }
     requestAnimationFrame(loop);
@@ -72,6 +71,17 @@ function setupUI(canvasElement) {
             e.target.dataset.playing = "no";
         }
     };
+
+    // TRACK SELECT
+    let trackSelect = document.querySelector("#trackSelect");
+    trackSelect.onchange = e => {
+        audio.loadSoundFile(e.target.value);
+
+        // pause the current track
+        if (playButton.dataset.playing = "yes") {
+            playButton.dispatchEvent(new MouseEvent("click"));
+        }
+    }
 
 } // end setupUI
 

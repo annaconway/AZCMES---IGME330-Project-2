@@ -33,7 +33,7 @@ function draw() {
         for(let y = 0; y < audio.K_SampleSpecs.delayTime  * audio.K_SampleSpecs.samplesPerSecond; y++)
         {
             let height = audio.getBarHeight(x,y) * barHeightMult;
-            drawBarFromLeft(gridOffset + barWidth * x + height, gridOffset + barWidth * y - height,barWidth,barWidth,height,'red','black');
+            drawBarFromLeft(gridOffset + barWidth * x + height, gridOffset + barWidth * y - height,barWidth,barWidth,height,'khaki','coral');
         }
     }
     console.log("finished draw");
@@ -43,7 +43,7 @@ function draw() {
 function drawBarFromLeft(x, y, width, length, barLength, fillColor, strokeColor) {
 
     ctx.save();
-    ctx.lineWidth = "4";
+    ctx.lineWidth = "2";
     ctx.strokeStyle = strokeColor;
     ctx.fillStyle = fillColor;
 
@@ -75,7 +75,7 @@ function drawBarFromLeft(x, y, width, length, barLength, fillColor, strokeColor)
 function drawBarFromBottom(x, y, width, length, barLength, fillColor, strokeColor) {
 
     ctx.save();
-    ctx.lineWidth = "4";
+    ctx.lineWidth = "2";
     ctx.strokeStyle = strokeColor;
     ctx.fillStyle = fillColor;
 
