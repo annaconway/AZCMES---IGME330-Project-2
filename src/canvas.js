@@ -1,7 +1,9 @@
 import * as utils from './utils.js';
+import * as audio from './audio.js';
 
 let analyserNode, audioData;
 const canvasWidth = 700, canvasHeight = 400;
+const barWidth = 10, barHeightMult = .1,gridOffset = 50;
 let ctx;
 
 function setupCanvas(canvasElement, analyserNodeRef) {
@@ -10,12 +12,6 @@ function setupCanvas(canvasElement, analyserNodeRef) {
     ctx = canvasElement.getContext("2d");
     canvasElement.width = canvasWidth;
     canvasElement.height = canvasHeight;
-
-    // Keep a reference to the analyser node
-    analyserNode = analyserNodeRef;
-
-    // This is the array where the analyser data will be stored
-    audioData = new Uint8Array(analyserNode.fftSize / 2);
 
     // Draw background
     ctx.save();
@@ -26,12 +22,24 @@ function setupCanvas(canvasElement, analyserNodeRef) {
 }
 
 function draw() {
+    // Draw background
+    ctx.save();
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    ctx.restore();
 
-    analyserNode.getByteFrequencyData(audioData); // Frequency data
-    //analyserNode.getByteTimeDomainData(audioData); // Waveform data
+    for(let x = audio.K_SampleSpecs.numSamples/2-1; x >= 0 ; x--)
+    {
+        for(let y = 0; y < audio.K_SampleSpecs.delayTime  * audio.K_SampleSpecs.samplesPerSecond; y++)
+        {
+            let height = audio.getBarHeight(x,y) * barHeightMult;
+            drawBarFromLeft(gridOffset + barWidth * x + height, gridOffset + barWidth * y - height,barWidth,barWidth,height,'red','black');
+        }
+    }
+    console.log("finished draw");
 }
 
-
+//modified to not be only drawn from left edge
 function drawBarFromLeft(x, y, width, length, barLength, fillColor, strokeColor) {
 
     ctx.save();
@@ -46,16 +54,16 @@ function drawBarFromLeft(x, y, width, length, barLength, fillColor, strokeColor)
     // Draw Lines 
     ctx.beginPath();
     ctx.moveTo(x, y);
-    ctx.lineTo(0, y + barLength);
-    ctx.lineTo(0, y + length + barLength);
+    ctx.lineTo(x - barLength, y + barLength);
+    ctx.lineTo(x - barLength, y + length + barLength);
     ctx.lineTo(x, y + length);
     ctx.lineTo(x, y);
     ctx.fill();
     ctx.stroke();
 
     ctx.moveTo(x + width, y + length);
-    ctx.lineTo(0, y + length + length + barLength);
-    ctx.lineTo(0, y + length + barLength);
+    ctx.lineTo(x - barLength + width, y + length + barLength);
+    ctx.lineTo(x - barLength, y + length + barLength);
     ctx.lineTo(x, y + length);
     ctx.lineTo(x + width, y + length);
     ctx.fill();

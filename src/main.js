@@ -17,11 +17,26 @@ function init() {
     let canvasElement = document.querySelector("canvas");
     setupUI(canvasElement);
     canvas.setupCanvas(canvasElement, audio.analyserNode);
-    //loop();
+    loop();
 }
 
+let sampleTimer = 0;
+var lastUpdate = Date.now();
 function loop() {
-    //requestAnimationFrame(loop);
+    canvas.draw();
+
+    var now = Date.now();
+    var dt = now - lastUpdate;
+
+    lastUpdate = now;
+    sampleTimer += dt;
+    if(sampleTimer >= 1/audio.K_SampleSpecs.samplesPerSecond)
+    {
+        audio.sample();
+        sampleTimer -= 1/audio.K_SampleSpecs.samplesPerSecond;
+        console.log("sampled");
+    }
+    requestAnimationFrame(loop);
 }
 
 
