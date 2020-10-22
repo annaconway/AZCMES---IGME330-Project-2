@@ -6,7 +6,7 @@ import * as canvas from './canvas.js';
 
 // 1 - here we are faking an enumeration
 const DEFAULTS = Object.freeze({
-    sound1: "media/Peanuts Theme.mp3"
+    sound1: "media/Howl's Theme.mp3"
 });
 
 function init() {
@@ -21,8 +21,11 @@ function init() {
 }
 
 let sampleTimer = 0;
+let frameTimer = 0;
+let frameCount = 0;
 var lastUpdate = Date.now();
 function loop() {
+    frameCount += 1;
     canvas.draw();
 
     var now = Date.now();
@@ -30,10 +33,16 @@ function loop() {
 
     lastUpdate = now;
     sampleTimer += dt;
-    if (sampleTimer >= 1 / audio.K_SampleSpecs.samplesPerSecond) {
+    frameTimer += dt;
+    if (sampleTimer >= 1000 / audio.K_SampleSpecs.samplesPerSecond) {
         audio.sample();
-        sampleTimer -= 1 / audio.K_SampleSpecs.samplesPerSecond;
-        console.log("sampled");
+        sampleTimer -= 1000 / audio.K_SampleSpecs.samplesPerSecond;
+    }
+    if(frameTimer > 1000)
+    {
+        frameTimer = 0;
+        console.log(frameCount);
+        frameCount = 0;
     }
     requestAnimationFrame(loop);
 }

@@ -9,9 +9,9 @@ const DEFAULTS = Object.freeze({
 });
 
 const K_SampleSpecs = Object.freeze({
-    numSamples: 32,
-    delayTime: 1,
-    samplesPerSecond: 30
+    numSamples: 256,
+    delayTime: .5,
+    samplesPerSecond: 60
 });
 
 // ARRAY FOR AUDIO FREQUENCY DATA
