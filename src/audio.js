@@ -22,22 +22,22 @@ let writeLocation = 0;
 let yOffset = 0;
 let audioData = new Uint8Array(arrLength);
 let tempArr = new Uint8Array(width);
+let biquadFilter;
+let lowShelfBiquadFilter;
+let distortionFilter;
 
-function getBarHeight(x,y)
-{
-    return audioData[(x + (y + yOffset) * width)%arrLength];
+function getBarHeight(x, y) {
+    return audioData[(x + (y + yOffset) * width) % arrLength];
 }
 
-function sample()
-{
+function sample() {
     analyserNode.getByteFrequencyData(tempArr);
-    for(let i = writeLocation; i < writeLocation + width; i++)
-    {
-        audioData[i]= tempArr[i-writeLocation];
+    for (let i = writeLocation; i < writeLocation + width; i++) {
+        audioData[i] = tempArr[i - writeLocation];
     }
     yOffset += 1;
     yOffset = yOffset >= height ? 0 : yOffset;
-    writeLocation = yOffset*width;
+    writeLocation = yOffset * width;
 }
 
 
@@ -56,7 +56,16 @@ function setupWebaudio(filePath) {
 
     // Source and Analyser nodes
     sourceNode = audioCtx.createMediaElementSource(element);
-    analyserNode = audioCtx.createAnalyser(); 
+    analyserNode = audioCtx.createAnalyser();
+
+    // Biquad Filter nodes
+    biquadFilter = audioCtx.createBiquadFilter();
+    biquadFilter.type = "highshelf";
+    lowShelfBiquadFilter = audioCtx.createBiquadFilter();
+    lowShelfBiquadFilter.type = "lowshelf";
+
+    // Distortion Filter node
+    distortionFilter = audioCtx.createWaveShaper();
 
     analyserNode.fftSize = K_SampleSpecs.numSamples;
 
@@ -64,11 +73,20 @@ function setupWebaudio(filePath) {
     gainNode = audioCtx.createGain();
     gainNode.gain.value = DEFAULTS.gain;
 
+    // Delay Node
     delayNode = audioCtx.createDelay(10.0);
     delayNode.delayTime.value = K_SampleSpecs.delayTime;
 
     // Connect nodes
-    sourceNode.connect(analyserNode);
+    //sourceNode.connect(analyserNode);
+    //analyserNode.connect(gainNode);
+    //gainNode.connect(delayNode);
+    //delayNode.connect(audioCtx.destination);
+
+    sourceNode.connect(distortionFilter);
+    distortionFilter.connect(biquadFilter);
+    biquadFilter.connect(lowShelfBiquadFilter);
+    lowShelfBiquadFilter.connect(analyserNode);
     analyserNode.connect(gainNode);
     gainNode.connect(delayNode);
     delayNode.connect(audioCtx.destination);
@@ -95,4 +113,40 @@ function setVolume(value) {
     gainNode.gain.value = value;
 }
 
-export { audioCtx, setupWebaudio, playCurrentSound, pauseCurrentSound, loadSoundFile, setVolume, getBarHeight, sample, K_SampleSpecs };
+function toggleHighshelf(params={}) {
+    if (params.highshelf) {
+        biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime); // we created the `biquadFilter` (i.e. "treble") node last time
+        biquadFilter.gain.setValueAtTime(25, audioCtx.currentTime);
+    } else {
+        biquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+    }
+}
+
+function toggleLowshelf(params={}) {
+    if (params.lowshelf) {
+        lowShelfBiquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+        lowShelfBiquadFilter.gain.setValueAtTime(15, audioCtx.currentTime);
+    } else {
+        lowShelfBiquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+    }
+}
+
+function toggleDistortion(params={}) {
+    if (params.distortion) {
+        distortionFilter.curve = null; 
+        distortionFilter.curve = makeDistortionCurve(distortionAmount);
+    } else {
+        distortionFilter.curve = null;
+    }
+}
+
+function makeDistortionCurve(amount = 20) {
+    let n_samples = 256, curve = new Float32Array(n_samples);
+    for (let i = 0; i < n_samples; ++i) {
+        let x = i * 2 / n_samples - 1;
+        curve[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
+    }
+    return curve;
+}
+
+export { audioCtx, toggleHighshelf, makeDistortionCurve, toggleLowshelf, toggleDistortion, setupWebaudio, playCurrentSound, pauseCurrentSound, loadSoundFile, setVolume, getBarHeight, sample, K_SampleSpecs };

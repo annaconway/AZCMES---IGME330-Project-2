@@ -2,6 +2,7 @@
 <html lang="en">
 
 <!-- HEAD  -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +10,11 @@
     <title>Audio Visualizer</title>
 
     <link rel="stylesheet" href="styles/default-styles.css">
-	<script src="./src/loader.js" type="module"></script>
+    <script src="./src/loader.js" type="module"></script>
 </head>
 
 <!-- BODY -->
+
 <body>
 
     <!-- CANVAS -->
@@ -26,33 +28,40 @@
                 <button id="playButton" data-playing="no"></button>
                 <button id="fsButton">Full Screen</button>
 
-                <label>Track: 
+                <label>Track:
                     <select id="trackSelect">
-                        <option value="media/Peanuts Theme.mp3" >Peanuts Theme</option>
-                        <option value="media/Moomin's Theme.mp3" >Moomin's Theme</option>
+                        <option value="media/Cannon in D major.mp3">Cannon in D major</option>
+                        <option value="media/Spirited Away Theme.mp3">Spirited Away Theme</option>
                         <option value="media/Howl's Theme.mp3" selected>Howl's Theme</option>
                     </select>
                 </label>
             </section>
-            
+
             <section>
                 Volume: <input type="range" id="volumeSlider" min="0" max="2" value="1" step="0.01">
                 <span id="volumeLabel">???</span>
             </section>
 
             <section>
-            <span><input type="checkbox" id="barsCB"><label for="barsCB">Show Bars</label></span>
-            <span><input type="checkbox" id="noiseCB"><label for="noiseCB">Show Noise</label></span>
-            <span><input type="checkbox" id="invertCB"><label for="invertCB">Invert Colors</label></span>          
+                <span><input type="checkbox" id="linesCB"><label for="linesCB">Show Lines</label></span>
+                <span><input type="checkbox" id="noiseCB"><label for="noiseCB">Show Noise</label></span>
+                <span><input type="checkbox" id="invertCB"><label for="invertCB">Invert Colors</label></span>
 
-            <label>Colors: 
-                <select id="trackSelect">
-                    <option value="Disco">Disco</option>
-                    <option value="Water" selected>Water</option>
-                    <option value="Petal">Petal</option>
-                </select>
-            </label>
-        </section>
+                <label>Colors:
+                    <select id="colorSelect">
+                        <option value="colorWater">Water</option>
+                        <option value="colorAurora" selected>Aurora</option>
+                        <option value="colorPetal">Petal</option>
+                        <option value="colorPicnic">Picnic</option>
+                    </select>
+                </label>
+                <br>
+                <label for="highshelfCB">Highshelf Filter (Treble)</label><input type="checkbox" id="highshelfCB">
+                <label for="lowshelfCB">Lowshelf Filter (Bass)</label><input type="checkbox" id="lowshelfCB">
+                <label for="distortionCB">Distortion</label><input type="checkbox" id="distortionCB">
+                <br>
+                <span>0 <input type="range" min="0" max="100" value="0" id="distortionSlider"> 100</span>
+            </section>
 
         </div>
     </main>

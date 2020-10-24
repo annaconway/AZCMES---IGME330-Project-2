@@ -1,7 +1,7 @@
 body {
-    background-color: coral;
+    background-color: black;
     margin: auto;
-    width: 700px;
+    width: 1050px;
     padding: 10px;
 }
 
@@ -11,8 +11,9 @@ canvas {
 
 #controlContainer {
     background-color: white;
-    border: 10px double coral;
+    border: 10px double black;
     width: 700px;
+    margin: auto;
     padding-left: 10px;
 }
 

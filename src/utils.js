@@ -34,4 +34,5 @@ const goFullscreen = (element) => {
     // .. and do nothing if the method is not supported
 };
 
-export { makeColor, getRandomColor, getLinearGradient, goFullscreen };
+
+export { makeColor, getRandom, getRandomColor, getLinearGradient, goFullscreen };
