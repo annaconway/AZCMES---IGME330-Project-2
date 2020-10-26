@@ -12,7 +12,7 @@ const customize = {
 };
 
 const features = {
-    showLines: false,
+    showLines: true,
     showNoise: false,
     showInvert: false,
     highshelf: false,
@@ -148,6 +148,9 @@ function setupUI(canvasElement) {
         }
         if (type == "colorPetal") {
             customize.colorPetal = true;
+        }
+        if(type == "colorPicnic") {
+            customize.colorPicnic = true;
         }
     }
 
