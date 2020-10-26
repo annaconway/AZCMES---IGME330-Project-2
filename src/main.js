@@ -8,8 +8,9 @@ const customize = {
 
     colorWater: false,
     colorPetal: false,
-    colorAurora: true,
-    colorPicnic: false
+    colorAurora: false,
+    colorPicnic: false,
+    colorGraphPaper: true
 };
 
 // Button Options
@@ -31,11 +32,11 @@ const DEFAULTS = Object.freeze({
 // Main Init
 function init() {    
     let audioControls = document.querySelector("#mainAudio");
-    audio.setupWebaudio(DEFAULTS.sound1,audioControls);
-    
     let canvasElement = document.querySelector("canvas");
-    canvas.setupCanvas(canvasElement, audio.analyserNode);
+    canvas.setupCanvas(canvasElement);
     setupUI(canvasElement);
+
+    audio.setupWebaudio(DEFAULTS.sound1,audioControls);
 
     loop();
 }
@@ -82,32 +83,6 @@ function setupUI(canvasElement) {
         utils.goFullscreen(canvasElement);
     };
 
-    //// VOLUME SLIDER
-    //let volumeSlider = document.querySelector("#volumeSlider");
-    //let volumeLabel = document.querySelector("#volumeLabel");
-    //volumeSlider.oninput = e => {
-    //   audio.setVolume(e.target.value);
-    //   volumeLabel.innerHTML = Math.round((e.target.value / 2 * 100));
-    //};
-    //volumeSlider.dispatchEvent(new Event("input"));
-
-    //// PLAY BUTTON
-    //playButton.onclick = e => {
-
-    //  if (audio.audioCtx.state == "suspended") {
-    //      audio.audioCtx.resume();
-    //  }
-
-    //  if (e.target.dataset.playing == "no") {
-    //      audio.playCurrentSound();
-    //      e.target.dataset.playing = "yes";
-    //  } else {
-    //      audio.pauseCurrentSound();
-    //      e.target.value = "Play";
-    //      e.target.dataset.playing = "no";
-    //  }
-    //};
-
     // TRACK SELECT
     let trackSelect = document.querySelector("#trackSelect");
     trackSelect.onchange = e => {
@@ -143,11 +118,11 @@ function setupUI(canvasElement) {
         // store type
         let type = e.target.value;
 
-        // set all false
         customize.colorWater = false;
-        customize.colorGalaxy = false;
         customize.colorPetal = false;
+        customize.colorAurora = false;
         customize.colorPicnic = false;
+        customize.colorGraphPaper = false;
 
         // set selected true
         if (type == "colorWater") {
@@ -162,6 +137,9 @@ function setupUI(canvasElement) {
         if(type == "colorPicnic") {
             customize.colorPicnic = true;
         }
+        if(type == "colorGraphPaper"){
+            customize.colorGraphPaper = true;
+        }
     }
 
     // COLOR SELECT
@@ -170,12 +148,11 @@ function setupUI(canvasElement) {
         features.highshelf = e.target.checked;
         audio.toggleHighshelf(features);
     };
-    audio.toggleHighshelf(features);
 
     // COLOR SELECT
     document.querySelector('#distortionSlider').value = features.distortionAmount;
     document.querySelector('#distortionSlider').onchange = e => {
-        features.distortionAmount = Number(e.target.value);
+        features.distortionAmount = Number(e.target.value/10);
         audio.toggleDistortion(features);
     };
 
@@ -185,7 +162,6 @@ function setupUI(canvasElement) {
         features.distortion = e.target.checked;
         audio.toggleDistortion(features);
     };
-    audio.toggleDistortion();
 
     // COLOR SELECT
     document.querySelector("#lowshelfCB").checked = features.lowshelf;
@@ -193,6 +169,13 @@ function setupUI(canvasElement) {
         features.lowshelf = e.target.checked;
         audio.toggleLowshelf(features);
     };
+
+    document.querySelector('#mainAudio').onplay = _ => {
+        audio.playCurrentSound();
+        audio.toggleDistortion(features);
+        audio.toggleLowshelf(features);
+        audio.toggleDistortion(features);
+    }
 
 } // end setupUI
 

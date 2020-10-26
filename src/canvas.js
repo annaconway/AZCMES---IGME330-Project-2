@@ -11,7 +11,7 @@ let color, colorWater, colorPetal, colorAurora;
 let stars = makeStars(5000);
 
 // CANVAS SETUP
-function setupCanvas(canvasElement, analyserNodeRef, tick) {
+function setupCanvas(canvasElement) {
 
     // Create canvas
     ctx = canvasElement.getContext("2d");
@@ -68,6 +68,12 @@ function draw(colorParams = {}, customParams = {}, tick) {
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.restore();
 
+    // Begin Drawing
+    ctx.save();
+
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = "1";
+
     // Determine Color
     if (colorParams.colorPicnic) {
         color = 'white';
@@ -117,6 +123,11 @@ function draw(colorParams = {}, customParams = {}, tick) {
             ctx.restore();
         }
     }
+    else if (colorParams.colorGraphPaper)
+    {
+        color = 'white';
+        ctx.strokeStyle = 'CornflowerBlue'
+    }
     else {
         color = 'black';
     }
@@ -127,8 +138,7 @@ function draw(colorParams = {}, customParams = {}, tick) {
 
     // Drawing settings
     ctx.fillStyle = color;
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = "1";
+
 
     // Standard Draw Loop
     let height1, height2, height3, height4;

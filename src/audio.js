@@ -1,5 +1,5 @@
 
-let audioCtx;                                               //public
+let audioCtx, soundPath;                                               //public
 let element, sourceNode, analyserNode, gainNode, delayNode; //private
 
 const DEFAULTS = Object.freeze({
@@ -32,6 +32,8 @@ function getBarHeight(x, y) {
 }
 
 function sample() {
+    if(analyserNode == null)
+        return;
     analyserNode.getByteFrequencyData(tempArr);
     for (let i = writeLocation; i < writeLocation + width; i++) {
         audioData[i] = tempArr[i - writeLocation];
@@ -46,15 +48,20 @@ function sample() {
 function setupWebaudio(filePath,audioControls) {
 
     element = audioControls;
+    soundPath = filePath;
+    audioCtx = null;
+}
 
+function initCtx()
+{
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     audioCtx = new AudioContext();
 
     // Grab sound file
-    loadSoundFile(filePath);
+    loadSoundFile(soundPath);
 
     // Source and Analyser nodes
-    sourceNode = audioCtx.createMediaElementSource(audioControls);
+    sourceNode = audioCtx.createMediaElementSource(element);
     analyserNode = audioCtx.createAnalyser();
 
     // Biquad Filter nodes
@@ -92,6 +99,8 @@ function loadSoundFile(filePath) {
 
 // PUBLIC FUNCTION THAT PLAYS CURRENT SOUND
 function playCurrentSound() {
+    if(audioCtx == null)
+        initCtx();
     element.play();
 }
 
@@ -108,6 +117,8 @@ function setVolume(value) {
 
 // PUBLIC FUNCTION THAT TOGGLES HIGHSHELF NODE
 function toggleHighshelf(params={}) {
+    if(biquadFilter == null)
+        return;
     if (params.highshelf) {
         biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime); // we created the `biquadFilter` (i.e. "treble") node last time
         biquadFilter.gain.setValueAtTime(5, audioCtx.currentTime);
@@ -118,6 +129,8 @@ function toggleHighshelf(params={}) {
 
 // PUBLIC FUNCTION THAT TOGGLES LOWSHELF NODE
 function toggleLowshelf(params={}) {
+    if(lowShelfBiquadFilter == null)
+        return;
     if (params.lowshelf) {
         lowShelfBiquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
         lowShelfBiquadFilter.gain.setValueAtTime(5, audioCtx.currentTime);
@@ -128,6 +141,8 @@ function toggleLowshelf(params={}) {
 
 // PUBLIC FUNCTION THAT TOGGLES DISTORTION NODE
 function toggleDistortion(params={}) {
+    if(distortionFilter == null)
+        return;
     distortionFilter.curve = null; 
     if (params.distortion) {
         distortionFilter.curve = makeDistortionCurve(params.distortionAmount);
