@@ -1,8 +1,6 @@
 
 let audioCtx;                                               //public
 let element, sourceNode, analyserNode, gainNode, delayNode; //private
-//temp
-let merger, splitter;
 
 const DEFAULTS = Object.freeze({
     gain: .5,
@@ -43,19 +41,18 @@ function sample() {
 
 
 // PUBLIC FUNCTION THAT SETS UP AUDIO NODES
-function setupWebaudio(filePath) {
+function setupWebaudio(filePath,audioControls) {
+
+    element = audioControls;
 
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     audioCtx = new AudioContext();
-
-    // Creates <audio> element
-    element = new Audio();
 
     // Grab sound file
     loadSoundFile(filePath);
 
     // Source and Analyser nodes
-    sourceNode = audioCtx.createMediaElementSource(element);
+    sourceNode = audioCtx.createMediaElementSource(audioControls);
     analyserNode = audioCtx.createAnalyser();
 
     // Biquad Filter nodes

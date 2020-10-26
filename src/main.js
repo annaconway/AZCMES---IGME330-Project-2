@@ -28,12 +28,15 @@ const DEFAULTS = Object.freeze({
 
 function init() {
     // Pick sound
-    audio.setupWebaudio(DEFAULTS.sound1);
+    
+    let audioControls = document.querySelector("#mainAudio");
+    audio.setupWebaudio(DEFAULTS.sound1,audioControls);
+    
+    let canvasElement = document.querySelector("canvas");
+    canvas.setupCanvas(canvasElement, audio.analyserNode);
+    setupUI(canvasElement);
 
     // Hookup <canvas> element
-    let canvasElement = document.querySelector("canvas");
-    setupUI(canvasElement);
-    canvas.setupCanvas(canvasElement, audio.analyserNode);
     loop();
 }
 
