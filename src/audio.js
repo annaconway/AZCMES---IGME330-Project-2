@@ -95,6 +95,7 @@ function initCtx()
 // PUBLIC FUNCTION THAT LOADS SOUND FILE
 function loadSoundFile(filePath) {
     element.src = filePath;
+    soundPath = filePath;
 }
 
 // PUBLIC FUNCTION THAT PLAYS CURRENT SOUND
