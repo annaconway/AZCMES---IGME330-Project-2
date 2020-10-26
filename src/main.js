@@ -15,6 +15,7 @@ const customize = {
 
 // Button Options
 const features = {
+    useWaveForm: false,
     showLines: true,
     showNoise: false,
     showInvert: false,
@@ -59,7 +60,7 @@ function loop() {
     sampleTimer += dt;
     frameTimer += dt;
     if (sampleTimer >= 1000 / audio.K_SampleSpecs.samplesPerSecond) {
-        audio.sample();
+        audio.sample(features.useWaveForm);
         sampleTimer -= 1000 / audio.K_SampleSpecs.samplesPerSecond;
     }
     if (frameTimer > 1000) {
@@ -140,6 +141,14 @@ function setupUI(canvasElement) {
         if(type == "colorGraphPaper"){
             customize.colorGraphPaper = true;
         }
+    }
+
+    document.querySelector("#useWaveForm").onchange = e => {
+        features.useWaveForm = e.bubbles;
+    }
+
+    document.querySelector("#useFrequency").onchange = e => {
+        features.useWaveForm = !e.bubbles;
     }
 
     // COLOR SELECT

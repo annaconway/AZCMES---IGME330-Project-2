@@ -31,10 +31,20 @@ function getBarHeight(x, y) {
     return audioData[(x + (y + yOffset) * width) % arrLength];
 }
 
-function sample() {
+function sample(useWaveform = false) {
     if(analyserNode == null)
         return;
-    analyserNode.getByteFrequencyData(tempArr);
+
+    if(useWaveform)
+    {
+        analyserNode.getByteTimeDomainData(tempArr);
+    }
+    else
+    {
+        analyserNode.getByteFrequencyData(tempArr);
+    }
+
+    //copy data from temp to main array
     for (let i = writeLocation; i < writeLocation + width; i++) {
         audioData[i] = tempArr[i - writeLocation];
     }
