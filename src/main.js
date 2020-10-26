@@ -158,7 +158,7 @@ function setupUI(canvasElement) {
     document.querySelector('#highshelfCB').checked = features.highshelf;
     document.querySelector('#highshelfCB').onchange = e => {
         features.highshelf = e.target.checked;
-        toggleHighshelf(features);
+        audio.toggleHighshelf(features);
     };
     audio.toggleHighshelf(features);
 
@@ -173,7 +173,7 @@ function setupUI(canvasElement) {
     document.querySelector("#distortionCB").checked = features.distortion;
     document.querySelector("#distortionCB").onchange = e => {
         features.distortion = e.target.checked;
-        audio.toggleDistortion();
+        audio.toggleDistortion(features);
     };
     audio.toggleDistortion();
 
@@ -181,9 +181,8 @@ function setupUI(canvasElement) {
     document.querySelector("#lowshelfCB").checked = features.lowshelf;
     document.querySelector("#lowshelfCB").onchange = e => {
         features.lowshelf = e.target.checked;
-        audio.toggleLowshelf();
+        audio.toggleLowshelf(features);
     };
-    audio.toggleLowshelf(features);
 
 } // end setupUI
 

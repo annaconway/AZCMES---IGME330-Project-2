@@ -110,8 +110,7 @@ function draw(colorParams = {}, customParams = {}) {
 
     //picnic draw loop
     if (colorParams.colorPicnic) {
-        //loop through values twice so draw calls can be made more effecently, only two draw calls with two loops
-        //instead of n draw calls with one loop
+        //loop through values again to add checkerboard pattern
         ctx.fillStyle = 'red';
         ctx.beginPath();
         for (let x = audio.K_SampleSpecs.numSamples / 2 - 1; x > 0; x--) {

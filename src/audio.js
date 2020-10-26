@@ -116,7 +116,7 @@ function setVolume(value) {
 function toggleHighshelf(params={}) {
     if (params.highshelf) {
         biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime); // we created the `biquadFilter` (i.e. "treble") node last time
-        biquadFilter.gain.setValueAtTime(25, audioCtx.currentTime);
+        biquadFilter.gain.setValueAtTime(5, audioCtx.currentTime);
     } else {
         biquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
     }
@@ -125,18 +125,16 @@ function toggleHighshelf(params={}) {
 function toggleLowshelf(params={}) {
     if (params.lowshelf) {
         lowShelfBiquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
-        lowShelfBiquadFilter.gain.setValueAtTime(15, audioCtx.currentTime);
+        lowShelfBiquadFilter.gain.setValueAtTime(5, audioCtx.currentTime);
     } else {
         lowShelfBiquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
     }
 }
 
 function toggleDistortion(params={}) {
+    distortionFilter.curve = null; 
     if (params.distortion) {
-        distortionFilter.curve = null; 
-        distortionFilter.curve = makeDistortionCurve(distortionAmount);
-    } else {
-        distortionFilter.curve = null;
+        distortionFilter.curve = makeDistortionCurve(params.distortionAmount);
     }
 }
 
