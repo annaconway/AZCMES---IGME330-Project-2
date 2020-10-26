@@ -51,9 +51,6 @@ function loop() {
     // Count Frames
     frameCount += 1;
 
-    // Draw bars
-    canvas.draw(customize, features);
-
     var now = Date.now();
     var dt = now - lastUpdate;
 
@@ -69,6 +66,9 @@ function loop() {
         console.log(frameCount);
         frameCount = 0;
     }
+
+    // Draw bars
+    canvas.draw(customize, features, dt);
 
     // Recall loop
     requestAnimationFrame(loop);

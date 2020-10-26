@@ -2,13 +2,16 @@ import * as utils from './utils.js';
 import * as audio from './audio.js';
 
 let analyserNode, audioData;
-const canvasWidth = 1050, canvasHeight = 290;
+const canvasWidth = 1075, canvasHeight = 300;
 const barWidth = 8, barHeightMult = .15, gridOffset = 10;
 let ctx;
 let color, colorWater, colorPetal, colorAurora;
 
+// Background animation variables
+let stars = makeStars(5000);
+
 // CANVAS SETUP
-function setupCanvas(canvasElement, analyserNodeRef) {
+function setupCanvas(canvasElement, analyserNodeRef, tick) {
 
     // Create canvas
     ctx = canvasElement.getContext("2d");
@@ -35,13 +38,14 @@ function setupCanvas(canvasElement, analyserNodeRef) {
 
     // Aurorora Gradient
     colorAurora = ctx.createLinearGradient(10, 0, 1050, 0);
-    colorAurora.addColorStop(0, 'aqua');
-    colorAurora.addColorStop(1 / 6, 'teal');
-    colorAurora.addColorStop(2 / 6, 'seagreen');
+
+    colorAurora.addColorStop(0, utils.makeColor(0, 255, 255, 0.09));
+    colorAurora.addColorStop(1 / 6, utils.makeColor(0, 128, 128, 0.5));
+    colorAurora.addColorStop(2 / 6, utils.makeColor(46, 139, 87, 0.8));
     colorAurora.addColorStop(3 / 6, 'midnightblue')
-    colorAurora.addColorStop(4 / 6, 'seagreen');
-    colorAurora.addColorStop(5 / 6, 'teal');
-    colorAurora.addColorStop(1, 'aqua');
+    colorAurora.addColorStop(4 / 6, utils.makeColor(46, 139, 87, 0.8));
+    colorAurora.addColorStop(5 / 6, utils.makeColor(0, 128, 128, 0.5));
+    colorAurora.addColorStop(1, utils.makeColor(0, 255, 255, 0.09));
 
     // Set canvas size
     canvasElement.width = canvasWidth;
@@ -56,20 +60,16 @@ function setupCanvas(canvasElement, analyserNodeRef) {
 }
 
 // DRAW LOOP
-function draw(colorParams = {}, customParams = {}) {
-    
+function draw(colorParams = {}, customParams = {}, tick) {
+
     // Reset background every loop
     ctx.save();
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.restore();
 
-    // Begin Drawing
-    ctx.save();
-
     // Determine Color
-    if (colorParams.colorPicnic)
-    {
+    if (colorParams.colorPicnic) {
         color = 'white';
     }
     else if (colorParams.colorWater) {
@@ -79,11 +79,51 @@ function draw(colorParams = {}, customParams = {}) {
         color = colorPetal;
     }
     else if (colorParams.colorAurora) {
+
         color = colorAurora;
+
+        // Animate stars
+        moveStars(tick * 0.1);
+
+        ctx.save();
+        // Get the coordinate dimensions
+        const cx = canvasWidth / 2;
+        const cy = canvasHeight / 2;
+
+        // Get the array length
+        const count = stars.length;
+
+        // Loop through array
+        for (var i = 0; i < count; i++) {
+
+            // Get 1 star
+            const star = stars[i];
+
+            // Modify it's x and y to canvas coords
+            const x = cx + star.x / (star.z * 0.001);
+            const y = cy + star.y / (star.z * 0.001);
+
+            // Make sure it's within the bounds of the canvas
+            if (x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight) {
+                continue;
+            }
+
+            // Determine z distance for brightness
+            const d = (star.z / 1000.0)
+            const b = 1 - d * d
+
+            // Draw star
+            starPixel(x, y, b);
+            ctx.restore();
+        }
     }
     else {
         color = 'black';
     }
+
+
+    // Begin Drawing
+    ctx.save();
 
     // Drawing settings
     ctx.fillStyle = color;
@@ -116,7 +156,7 @@ function draw(colorParams = {}, customParams = {}) {
 
     // Fill Quads
     ctx.fill();
-    
+
     // Determine whether Lines Show
     if (customParams.showLines && !colorParams.colorPicnic) {
         ctx.stroke();
@@ -133,7 +173,7 @@ function draw(colorParams = {}, customParams = {}) {
 
         ctx.beginPath();
         for (let x = audio.K_SampleSpecs.numSamples / 2 - 1; x > 0; x--) {
-            for (let y = 1 + x%2; y < audio.K_SampleSpecs.delayTime * audio.K_SampleSpecs.samplesPerSecond; y+=2) {
+            for (let y = 1 + x % 2; y < audio.K_SampleSpecs.delayTime * audio.K_SampleSpecs.samplesPerSecond; y += 2) {
                 height1 = audio.getBarHeight(x, y) * barHeightMult;
                 height2 = audio.getBarHeight(x - 1, y) * barHeightMult;
                 height3 = audio.getBarHeight(x - 1, y - 1) * barHeightMult;
@@ -187,7 +227,7 @@ function draw(colorParams = {}, customParams = {}) {
                 data[i + 1] = 255 - green;
                 data[i + 2] = 255 - blue;
             }
-        } 
+        }
 
         // Copy image data back to canvas
         ctx.putImageData(imageData, 0, 0);
@@ -203,6 +243,60 @@ function strokeQuad(x1, y1, x2, y2, x3, y3, x4, y4) {
     ctx.lineTo(x4, y4);
     ctx.lineTo(x1, y1);
 }
+
+// STAR DRAWING LOGIC
+// source: https://medium.com/better-programming/fun-with-html-canvas-lets-create-a-star-field-a46b0fed5002
+function makeStars(count) {
+
+    // Make star array
+    const out = [];
+
+    // Find star positions
+    for (let i = 0; i < count; i++) {
+
+        const s = {
+            x: utils.getRandom(-800, 800),
+            y: utils.getRandom(-450, 450),
+            z: Math.random(0, 1000)
+        };
+
+        out.push(s);
+    }
+
+    // Return star array
+    return out;
+}
+
+function starPixel(x, y, brightness) {
+
+    // Brightness between 0 and 1
+    const intensity = brightness * 255;
+
+    // Make grey color of varying brightness
+    ctx.fillStyle = utils.makeColor(intensity, intensity, intensity);
+
+    // Draw to canvas
+    ctx.fillRect(x, y, 1, 1);
+
+}
+
+function moveStars(distance) {
+    // Get the star array
+    const count = stars.length;
+
+    // Loop through array
+    for (var i = 0; i < count; i++) {
+        const s = stars[i];
+        s.z -= distance;
+
+        while (s.z <= 1) {
+            s.z += 1000;
+        }
+    }
+}
+
+
+
 
 
 export { setupCanvas, draw };
