@@ -9,6 +9,8 @@ let color, colorWater, colorPetal, colorAurora;
 
 // Background animation variables
 let stars = makeStars(5000);
+let clouds;
+let cloud;
 
 // CANVAS SETUP
 function setupCanvas(canvasElement) {
@@ -57,35 +59,58 @@ function setupCanvas(canvasElement) {
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.restore();
 
+    // Set Up cloud logic
+    cloud = new Image();
+    cloud.src = "http://silveiraneto.net/wp-content/uploads/2011/06/cloud.png";
+
+    // Make clouds
+    clouds = makeClouds(10);
+
 }
 
 // DRAW LOOP
 function draw(colorParams = {}, customParams = {}, tick) {
 
-    // Reset background every loop
-    ctx.save();
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    ctx.restore();
-
     // Begin Drawing
     ctx.save();
 
-    ctx.strokeStyle = 'black';
+    // Drawing settings
+    ctx.strokeStyle = utils.makeColor(0, 0, 0, 0.3);
     ctx.lineWidth = "1";
 
-    // Determine Color
+    // Determine Theme
     if (colorParams.colorPicnic) {
+
+        // Reset background every loop
+        resetBG("skyblue");
+
+        // Set Bar Color
         color = 'white';
+
+        // Draw Cloud background
+        drawClouds();
     }
     else if (colorParams.colorWater) {
+
+        // Reset background every loop
+        resetBG("black");
+
+        // Set bar color
         color = colorWater;
     }
     else if (colorParams.colorPetal) {
+        // Reset background every loop
+        resetBG("black");
+
+        // Set bar color
         color = colorPetal;
     }
     else if (colorParams.colorAurora) {
 
+        // Reset background every loop
+        resetBG("black");
+
+        // Set Bar color
         color = colorAurora;
 
         // Animate stars
@@ -123,26 +148,30 @@ function draw(colorParams = {}, customParams = {}, tick) {
             ctx.restore();
         }
     }
-    else if (colorParams.colorGraphPaper)
-    {
+    else if (colorParams.colorGraphPaper) {
+        // Reset background every loop
+        ctx.save();
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctx.restore();
+
         color = 'white';
         ctx.strokeStyle = 'CornflowerBlue'
     }
     else {
+        // Reset background every loop
+        resetBG("black");
+
         color = 'black';
     }
 
-
-    // Begin Drawing
-    ctx.save();
-
-    // Drawing settings
+    //Drawing Settings cont.
     ctx.fillStyle = color;
 
-
-    // Standard Draw Loop
+    // Draw Loop variables
     let height1, height2, height3, height4;
 
+    // Standard Draw Loop
     ctx.beginPath();
     for (let x = audio.K_SampleSpecs.numSamples / 2 - 1; x > 0; x--) {
         for (let y = 1; y < audio.K_SampleSpecs.delayTime * audio.K_SampleSpecs.samplesPerSecond; y++) {
@@ -254,6 +283,14 @@ function strokeQuad(x1, y1, x2, y2, x3, y3, x4, y4) {
     ctx.lineTo(x1, y1);
 }
 
+// RESET BACKGROUND
+function resetBG(color) {
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    ctx.restore();
+}
+
 // STAR DRAWING LOGIC
 // source: https://medium.com/better-programming/fun-with-html-canvas-lets-create-a-star-field-a46b0fed5002
 function makeStars(count) {
@@ -305,6 +342,46 @@ function moveStars(distance) {
     }
 }
 
+// CLOUD DRAWING LOGIC  
+// source: http://silveiraneto.net/2011/06/02/simple-html5-animation-clouds-over-background/
+function makeClouds(count) {
+
+    // Make cloud array
+    const out = [];
+
+    // Find cloud positions
+    for (let i = 0; i < count; i++) {
+
+        const c = {
+            x: utils.getRandom(-canvasWidth, canvasWidth),
+            y: utils.getRandom(-canvasHeight, canvasHeight),
+            image: cloud
+        };
+
+        out.push(c);
+    }
+
+    // Return cloud array
+    return out;
+}
+function drawClouds() {
+
+    // Get the cloud array
+    const count = clouds.length;
+
+    // Loop through array
+    for (var i = 0; i < count; i++) {
+        const c = clouds[i];
+
+        c.x += 0.3;
+
+        if (c.x > canvasWidth) {
+            c.x = -cloud.width;
+        }
+
+        ctx.drawImage(c.image, c.x, 0);
+    }
+}
 
 
 
