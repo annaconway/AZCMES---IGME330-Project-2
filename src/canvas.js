@@ -7,11 +7,13 @@ const barWidth = 8, barHeightMult = .15, gridOffset = 10;
 let ctx;
 let color, colorWater, colorPetal, colorAurora;
 
+// CANVAS SETUP
 function setupCanvas(canvasElement, analyserNodeRef) {
 
     // Create canvas
     ctx = canvasElement.getContext("2d");
 
+    // Water Gradient
     colorWater = ctx.createLinearGradient(10, 0, 1050, 0);
     colorWater.addColorStop(0, 'lightblue');
     colorWater.addColorStop(1 / 6, 'skyblue');
@@ -21,6 +23,7 @@ function setupCanvas(canvasElement, analyserNodeRef) {
     colorWater.addColorStop(5 / 6, 'aqua');
     colorWater.addColorStop(1, 'lightblue');
 
+    // Petal Gradient
     colorPetal = ctx.createLinearGradient(10, 0, 1050, 0);
     colorPetal.addColorStop(0, 'pink');
     colorPetal.addColorStop(1 / 6, 'plum');
@@ -30,6 +33,7 @@ function setupCanvas(canvasElement, analyserNodeRef) {
     colorPetal.addColorStop(5 / 6, 'violet');
     colorPetal.addColorStop(1, 'pink');
 
+    // Aurorora Gradient
     colorAurora = ctx.createLinearGradient(10, 0, 1050, 0);
     colorAurora.addColorStop(0, 'aqua');
     colorAurora.addColorStop(1 / 6, 'teal');
@@ -39,26 +43,31 @@ function setupCanvas(canvasElement, analyserNodeRef) {
     colorAurora.addColorStop(5 / 6, 'teal');
     colorAurora.addColorStop(1, 'aqua');
 
+    // Set canvas size
     canvasElement.width = canvasWidth;
     canvasElement.height = canvasHeight;
 
-    // Draw background
-    ctx.save();
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    ctx.restore();
-
-}
-
-function draw(colorParams = {}, customParams = {}) {
     // Draw background
     ctx.save();
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     ctx.restore();
 
-    // Draw quads
+}
+
+// DRAW LOOP
+function draw(colorParams = {}, customParams = {}) {
+    
+    // Reset background every loop
     ctx.save();
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    ctx.restore();
+
+    // Begin Drawing
+    ctx.save();
+
+    // Determine Color
     if (colorParams.colorPicnic)
     {
         color = 'white';
@@ -75,11 +84,13 @@ function draw(colorParams = {}, customParams = {}) {
     else {
         color = 'black';
     }
+
+    // Drawing settings
     ctx.fillStyle = color;
     ctx.strokeStyle = 'black';
     ctx.lineWidth = "1";
 
-    //standard draw loop
+    // Standard Draw Loop
     let height1, height2, height3, height4;
 
     ctx.beginPath();
@@ -102,16 +113,24 @@ function draw(colorParams = {}, customParams = {}) {
         }
     }
     ctx.closePath();
+
+    // Fill Quads
     ctx.fill();
+    
+    // Determine whether Lines Show
     if (customParams.showLines && !colorParams.colorPicnic) {
         ctx.stroke();
     }
+
+    // End Drawing
     ctx.restore();
 
-    //picnic draw loop
+    // Picnic draw loop
     if (colorParams.colorPicnic) {
-        //loop through values again to add checkerboard pattern
+
+        // Loop through values again to add checkerboard pattern
         ctx.fillStyle = 'red';
+
         ctx.beginPath();
         for (let x = audio.K_SampleSpecs.numSamples / 2 - 1; x > 0; x--) {
             for (let y = 1 + x%2; y < audio.K_SampleSpecs.delayTime * audio.K_SampleSpecs.samplesPerSecond; y+=2) {
@@ -131,13 +150,16 @@ function draw(colorParams = {}, customParams = {}) {
             }
         }
         ctx.closePath();
+
+        // Fill Quads
         ctx.fill();
     }
 
+    // End Drawing
     ctx.restore();
 
 
-    //effects
+    // Effects
     if (customParams.showNoise || customParams.showInvert) {
         let imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
         let data = imageData.data;
@@ -145,6 +167,8 @@ function draw(colorParams = {}, customParams = {}) {
         let width = imageData.width;
 
         for (let i = 0; i < length; i += 4) {
+
+            // Show Noise
             if (customParams.showNoise && Math.random() < .1) {
                 // data[i] is the red channel
                 // data[i+1] is the green channel
@@ -153,7 +177,9 @@ function draw(colorParams = {}, customParams = {}) {
                 data[i] = 0;
                 data[i + 1] = 0;
                 data[i + 2] = 0;
-            } // end if
+            }
+
+            // Show Invert
             if (customParams.showInvert) {
                 let red = data[i], green = data[i + 1], blue = data[i + 2];
 
@@ -161,31 +187,14 @@ function draw(colorParams = {}, customParams = {}) {
                 data[i + 1] = 255 - green;
                 data[i + 2] = 255 - blue;
             }
-        } // end for
+        } 
 
-        // D) copy image data back to canvas
+        // Copy image data back to canvas
         ctx.putImageData(imageData, 0, 0);
     }
 }
 
-function drawTris(x1, y1, x2, y2, x3, y3, fillColor, strokeColor) {
-    ctx.save();
-    ctx.lineWidth = "2";
-    ctx.strokeStyle = strokeColor;
-    ctx.fillStyle = fillColor;
-
-    // Draw Lines 
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.lineTo(x3, y3);
-    ctx.lineTo(x1, y1);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.restore();
-}
-
+// DRAW BARS
 function strokeQuad(x1, y1, x2, y2, x3, y3, x4, y4) {
 
     ctx.moveTo(x1, y1);
@@ -195,69 +204,5 @@ function strokeQuad(x1, y1, x2, y2, x3, y3, x4, y4) {
     ctx.lineTo(x1, y1);
 }
 
-//modified to not be only drawn from left edge
-function drawBarFromLeft(x, y, width, length, barLength, fillColor, strokeColor) {
-
-    ctx.save();
-    ctx.lineWidth = "2";
-    ctx.strokeStyle = strokeColor;
-    ctx.fillStyle = fillColor;
-
-    // Draw Square
-    ctx.fillRect(x, y, width, length);
-    ctx.strokeRect(x, y, width, length);
-
-    // Draw Lines 
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x - barLength, y + barLength);
-    ctx.lineTo(x - barLength, y + length + barLength);
-    ctx.lineTo(x, y + length);
-    ctx.lineTo(x, y);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.moveTo(x + width, y + length);
-    ctx.lineTo(x - barLength + width, y + length + barLength);
-    ctx.lineTo(x - barLength, y + length + barLength);
-    ctx.lineTo(x, y + length);
-    ctx.lineTo(x + width, y + length);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.restore();
-}
-
-function drawBarFromBottom(x, y, width, length, barLength, fillColor, strokeColor) {
-
-    ctx.save();
-    ctx.lineWidth = "2";
-    ctx.strokeStyle = strokeColor;
-    ctx.fillStyle = fillColor;
-
-    // Draw Square
-    ctx.fillRect(x, y, width, length);
-    ctx.strokeRect(x, y, width, length);
-
-    // Draw Lines 
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x - barLength, canvasHeight);
-    ctx.lineTo(x + width - barLength, canvasHeight);
-    ctx.lineTo(x, y + length);
-    ctx.lineTo(x, y);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.moveTo(x + width, y + length);
-    ctx.lineTo(x + width + width - barLength, canvasHeight);
-    ctx.lineTo(x + width - barLength, canvasHeight);
-    ctx.lineTo(x, y + length);
-    ctx.lineTo(x + width, y + length);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.restore();
-}
 
 export { setupCanvas, draw };

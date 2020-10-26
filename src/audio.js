@@ -12,14 +12,17 @@ const K_SampleSpecs = Object.freeze({
     samplesPerSecond: 60
 });
 
-// ARRAY FOR AUDIO FREQUENCY DATA
 let height = K_SampleSpecs.delayTime * K_SampleSpecs.samplesPerSecond;
 let width = K_SampleSpecs.numSamples / 2;
+
 let arrLength = width * height;
+
 let writeLocation = 0;
 let yOffset = 0;
+
 let audioData = new Uint8Array(arrLength);
 let tempArr = new Uint8Array(width);
+
 let biquadFilter;
 let lowShelfBiquadFilter;
 let distortionFilter;
@@ -37,7 +40,6 @@ function sample() {
     yOffset = yOffset >= height ? 0 : yOffset;
     writeLocation = yOffset * width;
 }
-
 
 
 // PUBLIC FUNCTION THAT SETS UP AUDIO NODES
@@ -74,12 +76,6 @@ function setupWebaudio(filePath,audioControls) {
     delayNode = audioCtx.createDelay(10.0);
     delayNode.delayTime.value = K_SampleSpecs.delayTime;
 
-    // Connect nodes
-    //sourceNode.connect(analyserNode);
-    //analyserNode.connect(gainNode);
-    //gainNode.connect(delayNode);
-    //delayNode.connect(audioCtx.destination);
-
     sourceNode.connect(distortionFilter);
     distortionFilter.connect(biquadFilter);
     biquadFilter.connect(lowShelfBiquadFilter);
@@ -110,6 +106,7 @@ function setVolume(value) {
     gainNode.gain.value = value;
 }
 
+// PUBLIC FUNCTION THAT TOGGLES HIGHSHELF NODE
 function toggleHighshelf(params={}) {
     if (params.highshelf) {
         biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime); // we created the `biquadFilter` (i.e. "treble") node last time
@@ -119,6 +116,7 @@ function toggleHighshelf(params={}) {
     }
 }
 
+// PUBLIC FUNCTION THAT TOGGLES LOWSHELF NODE
 function toggleLowshelf(params={}) {
     if (params.lowshelf) {
         lowShelfBiquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
@@ -128,6 +126,7 @@ function toggleLowshelf(params={}) {
     }
 }
 
+// PUBLIC FUNCTION THAT TOGGLES DISTORTION NODE
 function toggleDistortion(params={}) {
     distortionFilter.curve = null; 
     if (params.distortion) {
@@ -135,6 +134,7 @@ function toggleDistortion(params={}) {
     }
 }
 
+// PUBLIC FUNCTION THAT MAKES DISTORTION CURVE
 function makeDistortionCurve(amount = 20) {
     let n_samples = 256, curve = new Float32Array(n_samples);
     for (let i = 0; i < n_samples; ++i) {

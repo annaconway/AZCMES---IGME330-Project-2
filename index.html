@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <!-- HEAD  -->
 
 <head>
@@ -10,8 +11,12 @@
     <title>Audio Visualizer</title>
 
     <link rel="stylesheet" href="styles/default-styles.css">
+    <link rel="icon" type="image/png" href="images/music_off.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Kranky&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap" rel="stylesheet">
     <script src="./src/loader.js" type="module"></script>
 </head>
+
 
 <!-- BODY -->
 
@@ -22,30 +27,33 @@
 
     <!-- MAIN -->
     <main>
-        <div id="controlContainer">
-            <h1>Control Section</h1>
+
+        <div id="musicContainer">
+            <h1>Music</h1>
             <section>
-                <button id="playButton" data-playing="no"></button>
-                <button id="fsButton">Full Screen</button>
-
-                <audio id = "mainAudio" controls>
-                    <source src = "media/Howl's Theme.mp3">
-                </audio>
-
+                <!-- Track Selection -->
                 <label>Track:
                     <select id="trackSelect">
                         <option value="media/Cannon in D major.mp3">Cannon in D major</option>
                         <option value="media/Spirited Away Theme.mp3">Spirited Away Theme</option>
                         <option value="media/Howl's Theme.mp3" selected>Howl's Theme</option>
                     </select>
-                </label>
+                </label>      
             </section>
-
             <section>
-                Volume: <input type="range" id="volumeSlider" min="0" max="2" value="1" step="0.01">
-                <span id="volumeLabel">???</span>
+                <!-- Progress Bar -->
+                <audio id="mainAudio" controls>
+                    <source src="media/Howl's Theme.mp3">
+                </audio> 
             </section>
+            <section>
+                <!-- Fullscreen Button -->
+                <button id="fsButton">Full Screen</button>
 
+            </section>
+        </div>
+        <div id="aestheticsContainer">
+            <h1>Aesthetics</h1>
             <section>
                 <span><input type="checkbox" id="linesCB"><label for="linesCB">Show Lines</label></span>
                 <span><input type="checkbox" id="noiseCB"><label for="noiseCB">Show Noise</label></span>
@@ -58,18 +66,29 @@
                         <option value="colorPetal">Petal</option>
                         <option value="colorPicnic">Picnic</option>
                     </select>
-                </label>
-                <br>
+                </label><br>
+            </section>
+        </div>
+        <div id="audioContainer">
+            <h1>Audio</h1>
+            <section>
                 <label for="highshelfCB">Highshelf Filter (Treble)</label><input type="checkbox" id="highshelfCB">
+            </section>
+            <section>
                 <label for="lowshelfCB">Lowshelf Filter (Bass)</label><input type="checkbox" id="lowshelfCB">
+            </section>
+            <section>
                 <label for="distortionCB">Distortion</label><input type="checkbox" id="distortionCB">
-                <br>
                 <span>0 <input type="range" min="0" max="100" value="0" id="distortionSlider"> 100</span>
             </section>
-
         </div>
+
     </main>
 
 </body>
+
+<footer>
+    <p><i>Audio Visualizer by Matthew Sissom & Anna Conway</i></p>
+</footer>
 
 </html>

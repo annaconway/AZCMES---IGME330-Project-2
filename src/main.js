@@ -3,6 +3,7 @@ import * as utils from './utils.js';
 import * as audio from './audio.js';
 import * as canvas from './canvas.js';
 
+// Color Options
 const customize = {
 
     colorWater: false,
@@ -11,6 +12,7 @@ const customize = {
     colorPicnic: false
 };
 
+// Button Options
 const features = {
     showLines: true,
     showNoise: false,
@@ -21,14 +23,13 @@ const features = {
     distortionAmount: 20
 };
 
-// 1 - here we are faking an enumeration
+
 const DEFAULTS = Object.freeze({
     sound1: "media/Howl's Theme.mp3"
 });
 
-function init() {
-    // Pick sound
-    
+// Main Init
+function init() {    
     let audioControls = document.querySelector("#mainAudio");
     audio.setupWebaudio(DEFAULTS.sound1,audioControls);
     
@@ -36,17 +37,21 @@ function init() {
     canvas.setupCanvas(canvasElement, audio.analyserNode);
     setupUI(canvasElement);
 
-    // Hookup <canvas> element
     loop();
 }
 
+// Animation data
 let sampleTimer = 0;
 let frameTimer = 0;
 let frameCount = 0;
 var lastUpdate = Date.now();
 
 function loop() {
+
+    // Count Frames
     frameCount += 1;
+
+    // Draw bars
     canvas.draw(customize, features);
 
     var now = Date.now();
@@ -64,6 +69,8 @@ function loop() {
         console.log(frameCount);
         frameCount = 0;
     }
+
+    // Recall loop
     requestAnimationFrame(loop);
 }
 
@@ -75,31 +82,31 @@ function setupUI(canvasElement) {
         utils.goFullscreen(canvasElement);
     };
 
-    // VOLUME SLIDER
-    let volumeSlider = document.querySelector("#volumeSlider");
-    let volumeLabel = document.querySelector("#volumeLabel");
-    volumeSlider.oninput = e => {
-        audio.setVolume(e.target.value);
-        volumeLabel.innerHTML = Math.round((e.target.value / 2 * 100));
-    };
-    volumeSlider.dispatchEvent(new Event("input"));
+    //// VOLUME SLIDER
+    //let volumeSlider = document.querySelector("#volumeSlider");
+    //let volumeLabel = document.querySelector("#volumeLabel");
+    //volumeSlider.oninput = e => {
+    //   audio.setVolume(e.target.value);
+    //   volumeLabel.innerHTML = Math.round((e.target.value / 2 * 100));
+    //};
+    //volumeSlider.dispatchEvent(new Event("input"));
 
-    // PLAY BUTTON
-    playButton.onclick = e => {
+    //// PLAY BUTTON
+    //playButton.onclick = e => {
 
-        if (audio.audioCtx.state == "suspended") {
-            audio.audioCtx.resume();
-        }
+    //  if (audio.audioCtx.state == "suspended") {
+    //      audio.audioCtx.resume();
+    //  }
 
-        if (e.target.dataset.playing == "no") {
-            audio.playCurrentSound();
-            e.target.dataset.playing = "yes";
-        } else {
-            audio.pauseCurrentSound();
-            e.target.value = "Play";
-            e.target.dataset.playing = "no";
-        }
-    };
+    //  if (e.target.dataset.playing == "no") {
+    //      audio.playCurrentSound();
+    //      e.target.dataset.playing = "yes";
+    //  } else {
+    //      audio.pauseCurrentSound();
+    //      e.target.value = "Play";
+    //      e.target.dataset.playing = "no";
+    //  }
+    //};
 
     // TRACK SELECT
     let trackSelect = document.querySelector("#trackSelect");

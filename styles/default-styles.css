@@ -1,48 +1,57 @@
+/* PAGE LAYOUT*/
 body {
-    background-color: black;
+    background-image: url("/images/Texture-Paper.png");
     margin: auto;
     width: 1050px;
-    padding: 10px;
+    padding: 10px;    
 }
 
-canvas {
-    border: 10px double white;
-}
-
-#controlContainer {
-    background-color: white;
-    border: 10px double black;
-    width: 700px;
-    margin: auto;
-    padding-left: 10px;
-}
-
-#controls {
-    margin-left: 1rem;
-}
-
-#volumeLabel {
-    margin-left: 1rem;
+/* MAIN CONTROLS LAYOUT */
+main{
+    
+    display:flex;
+    height:100px;
 }
 
 section {
-    margin-bottom: 1rem;
+    margin-bottom: 5px;
 }
 
-#playButton {
-    font-size: 1rem;
-    width: 4rem;
+h1{
+    font-family: 'Kranky', cursive;
 }
 
-button[data-playing="yes"]:after {
-    content: "Pause";
+/* CANVAS DESIGN*/
+canvas {
+    border: 10px double black;
+    font-weight: 10;
 }
 
-button[data-playing="no"]:after {
-    content: "Play";
+/* CONTAINERS */
+#musicContainer, #aestheticsContainer, #audioContainer {
+    background-color: white;
+    border: 10px double black;
+    width: 600px;
+    margin: auto;
+    padding-left: 10px;
+    text-align: center;
+    height:250px;
+    font-family: 'Coming Soon', cursive;
 }
 
 #fsButton {
     font-size: 1rem;
     width: 7rem;
 }
+
+/* Footer Info*/
+footer{
+    border: 10px double black;
+    background-color: white;
+    height: 50px;
+    position: relative;
+    top: 175px;
+    font-family: 'Coming Soon', cursive;    
+    text-align: center;
+}
+
