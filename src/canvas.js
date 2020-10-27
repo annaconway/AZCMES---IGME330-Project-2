@@ -61,7 +61,8 @@ function setupCanvas(canvasElement) {
 
     // Set Up cloud logic
     cloud = new Image();
-    cloud.src = "http://silveiraneto.net/wp-content/uploads/2011/06/cloud.png";
+    //image from http://silveiraneto.net/wp-content/uploads/2011/06/cloud.png
+    cloud.src = "images/cloud.png";
 
     // Make clouds
     clouds = makeClouds(10);
