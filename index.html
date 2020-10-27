@@ -27,7 +27,6 @@
 
     <!-- MAIN -->
     <main>
-
         <div id="musicContainer">
             <h1>Music</h1>
             <section>
@@ -38,13 +37,13 @@
                         <option value="media/Spirited Away Theme.mp3">Spirited Away Theme</option>
                         <option value="media/Howl's Theme.mp3" selected>Howl's Theme</option>
                     </select>
-                </label>      
+                </label>
             </section>
             <section>
                 <!-- Progress Bar -->
                 <audio id="mainAudio" controls>
                     <source src="media/Howl's Theme.mp3">
-                </audio> 
+                </audio>
             </section>
             <section>
                 <!-- Fullscreen Button -->
@@ -55,10 +54,6 @@
         <div id="aestheticsContainer">
             <h1>Aesthetics</h1>
             <section>
-                <span><input type="checkbox" id="linesCB"><label for="linesCB">Show Lines</label></span>
-                <span><input type="checkbox" id="noiseCB"><label for="noiseCB">Show Noise</label></span>
-                <span><input type="checkbox" id="invertCB"><label for="invertCB">Invert Colors</label></span>
-
                 <label>Colors:
                     <select id="colorSelect">
                         <option value="colorGraphPaper" selected>Paper</option>
@@ -68,11 +63,15 @@
                         <option value="colorPicnic">Picnic</option>
                     </select>
                 </label><br>
+                <span><label for="linesCB">Show Lines</label><input type="checkbox" id="linesCB"></span><br>
+                <span><label for="invertCB">Invert Colors</label><input type="checkbox" id="invertCB"></span><br>
+                <span><label for="noiseCB">Noise</label><input type="checkbox" id="noiseCB"></span>
+                <span>0 <input type="range" min="0" max="100" value="50" id="noiseSlider"> 100</span>
                 <section>
-                    <input type="radio" id = "useFrequency" name = "dataType" checked>
-                    <label for = "useFrequency">Show Frequency Data</label><br>
-                    <input type="radio" id = "useWaveForm" name = "dataType">
-                    <label for = "useFrequency">Show Waveform Data</label><br>
+                    <input type="radio" id="useFrequency" name="dataType" checked>
+                    <label for="useFrequency">Show Frequency Data</label><br>
+                    <input type="radio" id="useWaveForm" name="dataType">
+                    <label for="useFrequency">Show Waveform Data</label><br>
                 </section>
             </section>
         </div>

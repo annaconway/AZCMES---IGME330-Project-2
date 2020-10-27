@@ -22,7 +22,8 @@ const features = {
     highshelf: false,
     lowshelf: false,
     distortion: false,
-    distortionAmount: 20
+    distortionAmount: 2,
+    noiseAmount: .1
 };
 
 
@@ -49,20 +50,20 @@ let frameCount = 0;
 var lastUpdate = Date.now();
 
 function loop() {
-
-    // Count Frames
-    frameCount += 1;
-
+    //limit the number of samples per second 
+    //to the resolution of the grid to save computations
     var now = Date.now();
     var dt = now - lastUpdate;
-
     lastUpdate = now;
     sampleTimer += dt;
-    frameTimer += dt;
     if (sampleTimer >= 1000 / audio.K_SampleSpecs.samplesPerSecond) {
         audio.sample(features.useWaveForm);
         sampleTimer -= 1000 / audio.K_SampleSpecs.samplesPerSecond;
     }
+
+    // Count Frames
+    frameCount += 1;
+    frameTimer += dt;
     if (frameTimer > 1000) {
         frameTimer = 0;
         console.log(frameCount);
@@ -151,28 +152,30 @@ function setupUI(canvasElement) {
         features.useWaveForm = !e.bubbles;
     }
 
-    // COLOR SELECT
     document.querySelector('#highshelfCB').checked = features.highshelf;
     document.querySelector('#highshelfCB').onchange = e => {
         features.highshelf = e.target.checked;
         audio.toggleHighshelf(features);
     };
 
-    // COLOR SELECT
-    document.querySelector('#distortionSlider').value = features.distortionAmount;
+    document.querySelector('#distortionSlider').value = features.distortionAmount*10;
     document.querySelector('#distortionSlider').onchange = e => {
         features.distortionAmount = Number(e.target.value/10);
         audio.toggleDistortion(features);
     };
 
-    // COLOR SELECT
+    document.querySelector('#noiseSlider').value = features.noiseAmount*70;
+    document.querySelector('#noiseSlider').onchange = e => {
+        features.noiseAmount = Number(e.target.value/143);
+        audio.toggleDistortion(features);
+    };
+
     document.querySelector("#distortionCB").checked = features.distortion;
     document.querySelector("#distortionCB").onchange = e => {
         features.distortion = e.target.checked;
         audio.toggleDistortion(features);
     };
 
-    // COLOR SELECT
     document.querySelector("#lowshelfCB").checked = features.lowshelf;
     document.querySelector("#lowshelfCB").onchange = e => {
         features.lowshelf = e.target.checked;

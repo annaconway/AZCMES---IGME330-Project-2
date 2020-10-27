@@ -219,7 +219,7 @@ function draw(colorParams = {}, customParams = {}, tick) {
         for (let i = 0; i < length; i += 4) {
 
             // Show Noise
-            if (customParams.showNoise && Math.random() < .1) {
+            if (customParams.showNoise && Math.random() < customParams.noiseAmount) {
                 // data[i] is the red channel
                 // data[i+1] is the green channel
                 // data[i+2] is the blue channel
