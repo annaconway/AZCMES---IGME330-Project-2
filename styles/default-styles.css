@@ -1,6 +1,6 @@
 /* PAGE LAYOUT*/
 body {
-    background-image: url("/images/Texture-Paper.png");
+    background-image: url("../images/Texture-Paper.png");
     margin: auto;
     width: 1095px;
     padding: 10px;    
