@@ -28,7 +28,7 @@ const features = {
 
 
 const DEFAULTS = Object.freeze({
-    sound1: "media/Howl's Theme.mp3"
+    sound1: "media/Howls-Theme.mp3"
 });
 
 // Main Init
@@ -89,11 +89,6 @@ function setupUI(canvasElement) {
     let trackSelect = document.querySelector("#trackSelect");
     trackSelect.onchange = e => {
         audio.loadSoundFile(e.target.value);
-
-        // pause the current track
-        if (playButton.dataset.playing = "yes") {
-            playButton.dispatchEvent(new MouseEvent("click"));
-        }
     }
 
     // LINES SELECT
